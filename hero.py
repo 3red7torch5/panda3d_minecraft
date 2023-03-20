@@ -252,10 +252,10 @@ class Hero():
     def togglesprint(self):
         if self.speed==0.1:
             self.speed=0.2
-            self.weapon.setHpr(0,120,0)
+            #self.weapon.setHpr(0,120,0)
         else:
             self.speed=0.1
-            self.weapon.setHpr(-90,90,90)
+            #self.weapon.setHpr(-90,90,90)
     def use(self):
         if self.slot==3:
             self.blockplace()

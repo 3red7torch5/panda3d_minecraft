@@ -117,7 +117,7 @@ while 1:
         base.fovc-=1
     base.camLens.setFov(base.fovc)
     if base.hero.speed>0.1:
-        #base.hero.weapon.setZ(np.sin(base.hero.hero.getX()+base.hero.hero.getY())/12+base.hero.wpzw)
+        base.hero.weapon.setZ(np.sin(base.hero.hero.getX()+base.hero.hero.getY())/12+base.hero.wpzw)
         base.hero.pic.setZ(np.cos(base.hero.hero.getX()+base.hero.hero.getY())/12+base.hero.wpzp)
     base.hero.frame()
     taskMgr.step()
