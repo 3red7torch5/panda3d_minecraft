@@ -32,7 +32,8 @@ class Hero():
         self.hero=loader.loadModel(model)
         self.head=loader.loadModel('smiley')
         self.hero.setTexture(loader.loadTexture(texture))
-        self.hero.setPos((position[0],position[1],position[2]))
+        #self.hero.setPos(position)
+        self.hero.setPos((0,0,0))
         self.hero.setColor((0.4,0.2,1,0))
         self.hero.setScale(0.5)
         self.hero.reparentTo(render)
@@ -352,6 +353,7 @@ class Hero():
                 currentpos[1]+=y
                 currentpos[2]+=z
     def shoot(self):
+        base.fovc+=10
         base.shotsound.play()
         pos=(self.hero.getX(),self.hero.getY(),self.hero.getZ()+(self.head.getZ()*0.5))
         x=np.sin(np.radians(self.head.getH()))/self.accuracy

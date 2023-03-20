@@ -41,13 +41,14 @@ class Game(ShowBase):
         self.shotsound=loader.loadSfx('punch.ogg')
         self.shotsound.setVolume(0.3)
         self.coun=0
+        self.fovc=100
     def generate_for_graph(self):
         c=0
-        for i in range(0,100):
-            for j in range(0,100):
-                self.land.addBlock((j*0.1,i*0.1,j**2*0.1),(1,1,1,1))
+        for x in range(0,50):
+            for y in range(0,50):
+                self.land.addBlock((x,y,round(np.cos(x**2+y**2-0.5))),(1,1,1,1))
             c+=1
-            print(str(c),'%')
+            print(str(c))
 game=Game()
 wprop=WindowProperties()
 wprop.setCursorHidden(True)
@@ -112,8 +113,11 @@ while 1:
     else:
         wprop.setCursorHidden(False)
         base.win.requestProperties(wprop)
+    if base.fovc>100:
+        base.fovc-=1
+    base.camLens.setFov(base.fovc)
     if base.hero.speed>0.1:
-        base.hero.weapon.setZ(np.sin(base.hero.hero.getX()+base.hero.hero.getY())/12+base.hero.wpzw)
+        #base.hero.weapon.setZ(np.sin(base.hero.hero.getX()+base.hero.hero.getY())/12+base.hero.wpzw)
         base.hero.pic.setZ(np.cos(base.hero.hero.getX()+base.hero.hero.getY())/12+base.hero.wpzp)
     base.hero.frame()
     taskMgr.step()
