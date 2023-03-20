@@ -346,6 +346,7 @@ class Hero():
             if len(fam)!=0:
                 for i in fam:
                     i.removeNode()
+                    base.breaksound.play()
                 break
             else:
                 currentpos[0]+=x

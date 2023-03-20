@@ -40,6 +40,8 @@ class Game(ShowBase):
         self.music.play()
         self.shotsound=loader.loadSfx('punch.ogg')
         self.shotsound.setVolume(0.3)
+        self.breaksound=loader.loadSfx('break.ogg')
+        self.breaksound.setVolume(0.3)
         self.coun=0
         self.fovc=100
     def generate_for_graph(self):
