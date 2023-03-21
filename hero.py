@@ -38,6 +38,11 @@ class Hero():
         self.hero.reparentTo(render)
         self.head.reparentTo(self.hero)
         self.head.setPos((0,0,4.5))
+        #self.feet=loader.loadModel(model)
+        #self.feet.setScale((1,1,0.45))
+        #self.feet.reparentTo(self.hero)
+        #self.feet.setZ(-1.75)
+        #self.feet.setColor((0.2,0,0.8,0))
         self.weapon=loader.loadModel('shotgun.obj')
         self.weapon.reparentTo(self.head)
         self.hero.setColor((0.2,0,0.8,1))
@@ -169,10 +174,10 @@ class Hero():
             self.isOnGround(self.hero.getPos())
         #print(f"X:{round(self.velocity_x,1)} Y:{round(self.velocity_y,1)} Z:{round(self.velocity_z,1)}")
     def isOnGround(self,pos):
-        p=(round(pos[0]),round(pos[1]),round(pos[2]))
-        if len(base.land.land.findAllMatches('=position='+str(p))):
-            self.hero.setZ(self.hero.getZ()+1)
-        if len(base.land.land.findAllMatches('=position='+str((p[0],p[1],p[2]-1))))!=0:
+        p=(round(pos[0]),round(pos[1]),round(pos[2]-0.1))
+        #if base.land.land.findAllMatches('=position='+str(p)):
+        #    self.hero.setZ(self.hero.getZ()+1)
+        if base.land.land.findAllMatches('=position='+str(p)):
             self.velocity_z=0
             self.jumping=False
         else:
@@ -361,7 +366,7 @@ class Hero():
         z=np.radians(self.head.getP())/self.accuracy
         currentpos=LVecBase3f(x,y,z)
         prepos=(round(pos[0]+currentpos[0]),round(pos[1]-currentpos[1]),round(pos[2]-currentpos[2]))
-        for _ in range(self.reach*10):
+        for _ in range(self.reach*30):
             cp=(round(pos[0]+currentpos[0]),round(pos[1]-currentpos[1]),round(pos[2]-currentpos[2]))
             fam=base.land.land.findAllMatches('=position='+str(cp))
             if len(fam)!=0:

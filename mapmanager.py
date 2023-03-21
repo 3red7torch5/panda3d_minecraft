@@ -131,7 +131,6 @@ class Mapmanager():
         self.textModels.destroy()
         self.textTextures.destroy()
         self.loadtimetext=OnscreenText(text='map loaded in '+str(datetime.now()-start_time),pos=(0,0.9),scale=0.05)
-        print('map loaded in '+str(datetime.now()-start_time))
         self.image.destroy()
         try:
             self.music.stop()
