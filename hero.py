@@ -124,6 +124,8 @@ class Hero():
         base.accept('f',self.use)
         base.accept('g',self.use)
         base.accept('g',self.flatplace)
+        base.accept('f5',base.land.save_world)
+        base.accept('f6',base.land.load_world)
     def selection(self,slot):
         if slot!=self.slot:
             self.slot=slot
@@ -172,13 +174,14 @@ class Hero():
             self.velocity_x,self.velocity_y,self.velocity_z=0,0,0
         if not self.mode=='noclip':
             self.isOnGround(self.hero.getPos())
-        #print(f"X:{round(self.velocity_x,1)} Y:{round(self.velocity_y,1)} Z:{round(self.velocity_z,1)}")
+        #print(f"X:{round(self.velocity_x,1)} Y:{round(self.velocity_y,1)} Z:{round(self.velocity_z,1)} \nJumping:{self.jumping}")
     def isOnGround(self,pos):
         p=(round(pos[0]),round(pos[1]),round(pos[2]-0.1))
         #if base.land.land.findAllMatches('=position='+str(p)):
         #    self.hero.setZ(self.hero.getZ()+1)
+        #print(len(base.land.land.findAllMatches('=position='+str(p))))
         if base.land.land.findAllMatches('=position='+str(p)):
-            self.velocity_z=0
+            self.hero.setZ(p[2]+0.51)
             self.jumping=False
         else:
             self.velocity_z-=0.15

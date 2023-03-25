@@ -83,8 +83,8 @@ while 1:
         game.hero.velocity_y*=1.1
         game.hero.velocity_z*=1.1
     if base.hero.hero.getZ()<=0:
-        base.hero.velocity_x=rd.randint(-20,20)
-        base.hero.velocity_y=rd.randint(-20,20)
+        base.hero.velocity_x=rd.randint(-2,2)
+        base.hero.velocity_y=rd.randint(-2,2)
         base.hero.velocity_z=15
     base.hero.moveplayer()
     #---

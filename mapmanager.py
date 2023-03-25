@@ -6,6 +6,7 @@ from direct.gui.DirectGui import DirectWaitBar
 from direct.gui.OnscreenText import OnscreenText
 from direct.gui.OnscreenImage import OnscreenImage
 import numpy as np
+import pickle
 color=(0.7,0.75,0.9,1)
 color0=(0,0.28,0.5,1)
 loadedmodels=['block.egg']
@@ -18,13 +19,29 @@ class Mapmanager():
         self.texture='block.png'
         self.lines=LineSegs()
         self.bar=DirectWaitBar(text="",pos=(0,0,0),barTexture='bar.png',barColor=(0.4,0.3,1,1),barBorderWidth=(2,2))
-        self.textModels=OnscreenText(text='',pos=(0,-0.5),scale=0.05)
-        self.textTextures=OnscreenText(text='',pos=(0,-0.6),scale=0.05)
         self.music=base.loader.loadSfx('aroundtheworld.ogg')
         self.music.setVolume(0.01)
         self.music.setLoop(True)
         self.image=OnscreenImage(image='fon.jpg',pos=(0,0,1),scale=5)
         self.lnodelist=[]
+    def save_world(self):
+        blocks=self.land.getChildren()
+        with open('save.dat','wb') as f:
+            pickle.dump(len(blocks),f)
+            for i in blocks:
+                x,y,z=i.getPos()
+                r,g,b,_=i.getColor()
+                pickle.dump((x,y,z,r,g,b),f)
+    def load_world(self):
+        #Макс сделай тут потом анимацию какую-нибудь, а то уныло
+        print(len(self.land.getChildren()))
+        self.clear()
+        print(len(self.land.getChildren()))
+        with open('save.dat','rb') as f:
+            for _ in range(pickle.load(f)):
+                x,y,z,r,g,b=pickle.load(f)
+                self.addBlock((x,y,z),(r,g,b,1))
+        print(len(self.land.getChildren()))
     def drawline(self,startpos,endpos,thcknss=1):
         self.lines=LineSegs()
         self.lines.setThickness(thcknss)
@@ -87,50 +104,19 @@ class Mapmanager():
                 strokalist=stroka.split(' ')
                 for cifraid,cimvol in enumerate(strokalist):
                     x_pos=-cifraid
-                    for cifra in cimvol.split('|'):
-                        try:
-                            colorid=int(cifra)
-                            if int(cifra)>=len(self.colorlist):
-                                for _ in range(int(cifra)//len(self.colorlist)):
-                                    colorid-=len(self.colorlist)
-                            self.addBlock((x_pos,y_pos,int(cifra)),self.colorlist[int(colorid)])
-                        except:
-                            colorid=int(round(float(cifra[:-1])))-1
-                            if colorid>=len(self.colorlist):
-                                for _ in range(colorid//len(self.colorlist)):
-                                    colorid-=len(self.colorlist)
-                            if cifra[-1]=='P':
-                                playerpos=(x_pos,y_pos,float(cifra[:-1]))
-                                self.bar['text']='placed Player'
-                            elif cifra[-1]=='A':
-                                self.addCustomModel((x_pos,y_pos,float(cifra[:-1])),(0.6,0.6,0.8,1),'strangeobject.obj','block.png',1.5,2,1.5)
-                            elif cifra[-1]=='B':
-                                self.addCustomModel((x_pos,y_pos,float(cifra[:-1])),(0.5,0.5,0.5,1),'bomb.obj','bomb.png',3,3,3)
-                            elif cifra[-1]=='C':
-                                self.addCustomModel((x_pos,y_pos,float(cifra[:-1])),(0.5,0.5,0.5,1),'shotgun.obj','space.png',1.5,1.5,1.5)
-                            elif cifra[-1]=='S':
-                                self.addCustomModel((x_pos,y_pos,float(cifra[:-1])),(0.5,0.7,0.5,1),'smiley','block.png',1,1,1)
-                            elif cifra[-1]=='H':
-                                self.addCustomModel((x_pos,y_pos,float(cifra[:-1])),(0.5,0.7,0.5,1),'block.egg','block.png',0.5,1,0.5)
-                            elif cifra[-1]=='D':
-                                self.shtuka=DynamicObject((x_pos,y_pos,float(cifra[:-1])),(0.2,0.2,0.2,1),'bomb.obj','space.png')
-                            else:
-                                print(f'Wrong {cifraid+1} symbol "{cimvol}"({cifra}) in {strokaid+1} line, placed debug block')
-                                self.addBlock((x_pos,y_pos,0),(1,0,1,1))
-                                self.drawline((x_pos,y_pos,0),(x_pos,y_pos,100),3)
-                                self.drawline((x_pos+0.2,y_pos+0.2,0),(x_pos+0.2,y_pos-0.2,100))
-                                self.drawline((x_pos-0.2,y_pos-0.2,0),(x_pos+0.2,y_pos-0.2,100))
-                                self.drawline((x_pos-0.2,y_pos+0.2,0),(x_pos+0.2,y_pos-0.2,100))
-                                self.drawline((x_pos+0.2,y_pos-0.2,0),(x_pos+0.2,y_pos-0.2,100))
-                            self.textModels['text']=str(loadedmodels)
-                            self.textTextures['text']=str(loadedtextures)
+                    cifra=cimvol.split('|')
+                    colorid=int(cifra[0])
+                    if int(cifra[0])>=len(self.colorlist):
+                        for _ in range(int(cifra[0])//len(self.colorlist)):
+                            colorid-=len(self.colorlist)
+                    self.addBlock((x_pos,y_pos,int(cifra[0])),self.colorlist[int(colorid)])
+                    if cifra[-1]=='P':
+                        playerpos=(x_pos,y_pos,float(cifra[0]))
+                        self.bar['text']='placed Player'
                 self.bar['value']=(strokaid+1)/len(lines)*100
                 self.image['r']+=3
                 taskMgr.step()
         self.bar.destroy()
-        self.textModels.destroy()
-        self.textTextures.destroy()
-        self.loadtimetext=OnscreenText(text='map loaded in '+str(datetime.now()-start_time),pos=(0,0.9),scale=0.05)
         self.image.destroy()
         try:
             self.music.stop()
